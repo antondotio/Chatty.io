@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     
     let ownMessage = { id: 'alert', body: 'Welcome to the chat, ' + username + '!'}
     let otherMessage =  { id: 'alert', body: username + ' has joined the chat!' }
-    socket.emit('new connection', {user: user, onlineUsers: onlineUsers, history: history});
+    socket.emit('successful connection', {user: user, onlineUsers: onlineUsers, history: history});
     socket.emit('message received', ownMessage);
 
     saveMessage(otherMessage);
