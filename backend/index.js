@@ -2,11 +2,9 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const io = require('socket.io')(server)
 const PORT = 8000;
 const SAVED_MESSAGES_LIMIT = 200;
-
 
 // structured as {id: socket.id, username: username, color: '#000000' };
 let onlineUsers = []
@@ -14,11 +12,13 @@ let history = [];
 
 io.on('connection', (socket) => {
 
+
   socket.on('connect new user', (newUser) => {
+    console.log(newUser);
     if(newUser.username === ''){
       newUser.username = generateUsername();
     } 
-    if(validateHexColor(newUser.color)){
+    if(!validateHexColor(newUser.color)){
       newUser.color = '000000';
     }
     const user = { id: socket.id, username: newUser.username, color: newUser.color };
@@ -32,6 +32,13 @@ io.on('connection', (socket) => {
     saveMessage(otherMessage);
     socket.broadcast.emit('new user connected', { message: otherMessage, onlineUsers: onlineUsers });
   });
+
+  // socket.on('connect existing user', (existingUser) => {
+  //   const prevId = existingUser.id;
+  //   const color = existingUser.color;
+  //   let username = existingUser.username;
+
+  // })
 
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
