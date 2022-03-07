@@ -1,0 +1,56 @@
+.page {
+  background-color: grey;
+}
+
+.chat-wrapper {
+  height: 100vh;
+  width: 100vw;
+}
+
+.modal {
+  background-color: rgba(54, 134, 138, 0.548);
+  margin: 10% 30% 10% 30%;
+  max-width: 40%;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  line-height: 1.8;
+}
+
+.chatForm {
+  width: 100%;
+  height: 6%;
+  display: flex;
+  flex-direction: row;
+}
+
+.message-wrapper {
+}
+
+.outgoing {
+}
+
+.incoming {
+}
+
+.alert {
+}
+
+.alert-message {
+}
+
+.row {
+}
+
+.timestamp-text {
+}
+
+.username-text {
+}
+
+.message-text {
+}
