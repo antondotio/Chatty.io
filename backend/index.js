@@ -1,3 +1,4 @@
+const e = require('express');
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -25,16 +26,22 @@ io.on('connection', (socket) => {
       if(newUser.username === user.username){
         exists = true;
         console.log('user already exists');
-        socket.emit('failed connection', { type: 'new' });
+        socket.emit('failed connection', { type: 'username' });
       } 
     });
 
-    if(!exists){
+    let validColor = true;
+    if(!validateHexColor(newUser.color) && newUser.color !== ''){
+      validColor = false;
+      socket.emit('failed connection', { type: 'color' });
+    }
+
+    if(!exists && validColor){
       if(newUser.username === ''){
         newUser.username = generateUsername();
       } 
-      if(!validateHexColor(newUser.color)){
-        newUser.color = '#000000';
+      if(newUser.color === ''){
+        newUser.color = '000000';
       }
       const user = { id: socket.id, username: newUser.username, color: '#' + newUser.color };
       onlineUsers.push(user);
@@ -45,48 +52,90 @@ io.on('connection', (socket) => {
       socket.emit('message received', ownMessage);
       
       saveMessage(otherMessage);
-      console.log(history);
       socket.broadcast.emit('new user connected', { message: otherMessage, onlineUsers: onlineUsers });
     }
   });
 
-  socket.on('connect existing user', (existingUser) => {
-    console.log('reconnecting existing user');
-
-    const prevId = existingUser.id;
-    const color = existingUser.color;
-    let username = existingUser.username;
-    let exists = false;
-
-    onlineUsers.forEach((user) => {
-      if (username === user.username){
-        exists = true;
-      }
-    })
-
-    if(exists) {
-      const user = { id: socket.id, username: username, color: color };
-      
-      let ownMessage = { id: 'alert', body: 'Welcome back to the chat, ' + existingUser.username + '!'}
-      let otherMessage =  { id: 'alert', body: existingUser.username + ' has rejoined the chat!' }
-      socket.emit('successful connection', {user: user, onlineUsers: onlineUsers, history: history});
-      socket.emit('message received', ownMessage);
-  
-      saveMessage(otherMessage);
-      socket.broadcast.emit('existing user reconnected', { message: otherMessage, onlineUsers: onlineUsers, prevId: prevId, newId: socket.id });
-    
-    } else {
-      console.log('user does not exists');
-      socket.emit('failed connection', { type: 'exists' });
-    }
-  })
-
   socket.on('chat message', (messageObject) => {
     let timeStamp = new Date().toLocaleString('en-US', { hour12: true });
-    let message = { id: messageObject.id, body: messageObject.message, username: messageObject.username, timeStamp: timeStamp};
+    let message = { id: messageObject.id, body: messageObject.message, username: messageObject.username, timeStamp: timeStamp, color: messageObject.color};
     saveMessage(message);
 
     io.emit('message received', message);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+    let disconnectedUser;
+    onlineUsers.forEach((user, index) => {
+      if(user.id === socket.id){
+        disconnectedUser = user
+        onlineUsers.splice(index, 1);
+      }
+    });
+
+    if(disconnectedUser) {
+      let message =  { id: 'alert', body: disconnectedUser.username + ' has disconnected from the chat!' }
+      saveMessage(message);
+      socket.broadcast.emit('user disconnected', { message: message, onlineUsers: onlineUsers });
+    }
+  });
+
+  socket.on('update profile', (newProfile) => {
+    console.log('Updating Profile');
+    let username;
+    let color;
+    onlineUsers.forEach((user) => {
+      if(user.id === newProfile.id){
+        username = user.username;
+        color = user.color;
+      }
+    });
+    
+    let exists = false;
+    onlineUsers.forEach((user) => {
+      if(user.username === newProfile.username){
+        exists = true;
+        socket.emit('failed connection', { type: 'username' });
+      }
+    });
+
+    let validColor = true;
+    if(!validateHexColor(newProfile.color) && newProfile.color !== ''){
+      validColor = false;
+      socket.emit('failed connection', { type: 'color' });
+    }
+
+    if(!exists && validColor){
+      onlineUsers.forEach((user, index) => {
+        if(user.id === newProfile.id && newProfile.username !== ''){
+          onlineUsers.at(index).username = newProfile.username;
+        }
+        if(user.id === newProfile.id && newProfile.color !== ''){
+          onlineUsers.at(index).color = newProfile.color;
+        }
+      });
+
+      history.forEach((message, index) => {
+        if(message.id === newProfile.id && newProfile.username !== ''){
+          history.at(index).username = newProfile.username;
+        }
+        if(message.id === newProfile.id && newProfile.color !== ''){
+          history.at(index).color = '#' + newProfile.color;
+        }
+      })
+
+      if(newProfile.username !== ''){
+        username = newProfile.username;
+      }
+      if(newProfile.color !== ''){
+        color = newProfile.color;
+      }
+
+      let updatedUser = { id: socket.id, username: username, color: '#' + color};
+      socket.emit('successful connection', {user: updatedUser, onlineUsers: onlineUsers, history: history});
+      io.emit('user updated', { onlineUsers: onlineUsers, history: history });
+    }
   });
 
 });

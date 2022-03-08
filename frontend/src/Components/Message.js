@@ -11,12 +11,11 @@ class Message extends React.Component {
             <div>
               <span className='timestamp-text'>{this.props.message.timeStamp}</span>
               &nbsp;&nbsp;
-              <span className='username-text' style={{ color : this.props.user.color}}>{this.props.message.username}</span> 
+              <span className='username-text' style={{ color : this.props.message.color }}>{this.props.message.username}</span> 
               &nbsp;&nbsp;
               <span className='message-text'>{this.props.message.body}</span> 
-            </div>
-            :
-            <span className='alert-message' style={{ color : this.props.user.color}}>{this.props.message.body}</span>
+            </div> :
+            <span className='alert-message' style={{ color : this.props.user.color }}>{this.props.message.body}</span>
           }
 
         </div>

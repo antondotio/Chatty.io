@@ -15,6 +15,7 @@ class App extends React.Component {
       onlineUsers: [],
       message: '',
       showModal: true,
+      showUpdateModal: false,
     }
 
     this.sendMessage = this.sendMessage.bind(this);
@@ -22,6 +23,8 @@ class App extends React.Component {
     this.enterPressed = this.enterPressed.bind(this);
     this.handleUserSubmit = this.handleUserSubmit.bind(this);
     this.handleMessageChange = this.handleMessageChange.bind(this);
+    this.handleUserUpdateClick = this.handleUserUpdateClick.bind(this);
+    this.handleUserUpdateSubmit = this.handleUserUpdateSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -34,16 +37,18 @@ class App extends React.Component {
         onlineUsers: body.onlineUsers,
         messages: body.history,
         showModal: false,
+        showUpdateModal: false,
       });
     })
 
     this.socket.on('failed connection', (body) => {
-      if(body.type === 'new') {
+      if(body.type === 'username'){
         alert('Username already exists!');
-      } else {
-        alert('User does not exist, please create a new user!');
+      } else if (body.type === 'color'){
+        alert('Invalid hex color!');
       }
     })
+
 
     this.socket.on('new user connected', (body) => {
       this.receivedMessage(body.message);
@@ -52,17 +57,24 @@ class App extends React.Component {
       });
     })
 
-    this.socket.on('existing user reconnected', (body) => {
+    this.socket.on('message received', (message) => {
+      this.receivedMessage(message);
+    })
+
+    this.socket.on('user disconnected', (body) => {
       this.receivedMessage(body.message);
-      this.updateMessageIds(body.prevId, body.newId)
       this.setState({
         onlineUsers: body.onlineUsers,
       });
     })
 
-    this.socket.on('message received', (message) => {
-      this.receivedMessage(message);
+    this.socket.on('user updated', (body) => {
+      this.setState({
+        onlineUsers: body.onlineUsers,
+        messages: body.history,
+      });
     })
+
   }
 
   componentWillUnmount(){
@@ -92,37 +104,14 @@ class App extends React.Component {
     if (this.state.message === '') return;
     const messageObject = {
       username: sessionStorage.getItem('username'),
+      color: sessionStorage.getItem('color'),
       message: this.state.message,
       id: sessionStorage.getItem('id'),
     };
-
-    let detectedCommand = this.detectCommand(messageObject);
-    if(detectedCommand) {
-      this.socket.emit(detectedCommand.command, detectedCommand.argument);
-    } else {
-      this.socket.emit('chat message', messageObject);
-    }
+    this.socket.emit('chat message', messageObject);
     this.setState({
       message: '',
     });
-  }
-
-  detectCommand(messageObject) {
-    if(!messageObject.message.match(RegExp('^/'))) return;
-
-    let messageArr = messageObject.message.split(RegExp('\\s{1,}'));
-    
-    // TODO implement these
-    if (messageArr[0].match(RegExp('/nickcolor'))) {
-      messageArr.shift();
-      return {command: 'change color', argument: messageArr};
-    }
-    if (messageArr[0].match(RegExp('/nick'))) {
-      messageArr.shift();
-      return {command: 'change username', argument: messageArr}
-    }
-
-    return {command: 'unknown', argument: { body: this.state.message, username: this.state.username }}
   }
 
   updateMessageIds(prevId, newId) {
@@ -156,21 +145,38 @@ class App extends React.Component {
     });
   }
 
+  handleUserUpdateClick() {
+    this.setState({
+      showUpdateModal: true
+    })
+  }
+
+  handleUserUpdateSubmit(event) {
+    event.preventDefault();
+    let newName = event.target.name.value;
+    let newColor = event.target.color.value;
+    let newProfile = { id: sessionStorage.getItem('id'), username: newName, color: newColor };
+    
+    if(newName === '' && newColor === ''){
+      this.setState({
+        showUpdateModal: false,
+      });
+      return;
+    } else {
+      this.socket.emit('update profile', newProfile);
+    }
+
+  }
+
   handleUserSubmit(event){
     event.preventDefault();  
     let username = event.target.name.value;
     let color = event.target.color.value;
-    if(event.target.userType.value === 'newUser'){
-      const user = {username: username, color: color};
-      this.socket.emit('connect new user', user); 
-
-    } else {
-      const user = { id: sessionStorage.getItem('id'), username: username, color: color};
-      this.socket.emit('connect existing user', user);
-    }
-    
+    const user = {username: username, color: color};
+    this.socket.emit('connect new user', user); 
   }
 
+  // TODO BOLD TEXTS
   render() {
     return (
       <div className='page'>
@@ -181,13 +187,18 @@ class App extends React.Component {
             </label>
             <input type='text' name='name'></input>
             Enter a 6-digit color hexcode, or leave blank for default color:
-              <input type='text' name='color'></input>
+            <input type='text' name='color'></input>
+            <input type='submit' value='Submit' />
+          </form>
+        </ReactModal>
+        <ReactModal className='modal' isOpen={this.state.showUpdateModal} contentLabel='modal' ariaHideApp={false}>
+          <form className='modalForm' onSubmit={this.handleUserUpdateSubmit}>
             <label>
-              <input className='radio' type='radio' value='newUser' name='userType' defaultChecked={true} /> New User
+              Enter a new username:
             </label>
-            <label>
-              <input type='radio' value='existingUser' name='userType'/> Existing User
-            </label>
+            <input type='text' name='name'></input>
+            Enter a new 6-digit color hexcode:
+            <input type='text' name='color'></input>
             <input type='submit' value='Submit' />
           </form>
         </ReactModal>
@@ -197,6 +208,10 @@ class App extends React.Component {
             <textarea value={this.state.message} onChange={this.handleMessageChange} onKeyPress={e => this.enterPressed(e)} placeholder='Type a message...' />
             <button type='submit' name='Submit'>Send</button>
           </form>
+        </div>
+        <div className='sidebar-wrapper'>
+          <SideBar onlineUsers={this.state.onlineUsers}></SideBar>
+          <button className='profile' onClick={this.handleUserUpdateClick}>Update Profile</button>
         </div>
       </div>
     );
