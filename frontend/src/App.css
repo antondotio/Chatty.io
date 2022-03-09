@@ -106,6 +106,14 @@
   overflow-y: auto;
 }
 
+.outgoing {
+  font-weight: bold;
+}
+
+.alert {
+  text-align: center;
+}
+
 textarea {
   resize: none;
   padding: 2px 10px 2px 10px;

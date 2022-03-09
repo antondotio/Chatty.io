@@ -58,10 +58,11 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (messageObject) => {
     let timeStamp = new Date().toLocaleString('en-US', { hour12: true });
-    let message = { id: messageObject.id, body: messageObject.message, username: messageObject.username, timeStamp: timeStamp, color: messageObject.color};
-    saveMessage(message);
-
-    io.emit('message received', message);
+    let otherMessage = { id: messageObject.id, body: messageObject.message, username: messageObject.username, timeStamp: timeStamp, color: messageObject.color};
+    // let ownMessage = { id: messageObject.id, body: '<b>' + messageObject.message + '</b>', username: messageObject.username, timeStamp: timeStamp, color: messageObject.color};
+    // socket.emit('own message', ownMessage)
+    saveMessage(otherMessage)
+    io.emit('message received', otherMessage);
   });
   
   socket.on('disconnect', () => {
