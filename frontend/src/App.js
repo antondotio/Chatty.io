@@ -181,8 +181,9 @@ class App extends React.Component {
     return (
       <div className='page'>
         <ReactModal className='modal' isOpen={this.state.showModal} contentLabel='modal' ariaHideApp={false}>
-          <h2>Login</h2>
           <form className='modalForm' onSubmit={this.handleUserSubmit}>
+            <h2>Login</h2>
+
             <label>
               Enter a username, or leave blank for a random username:
             </label>
@@ -193,8 +194,8 @@ class App extends React.Component {
           </form>
         </ReactModal>
         <ReactModal className='modal' isOpen={this.state.showUpdateModal} contentLabel='modal' ariaHideApp={false}>
-          <h2>Update Profile</h2>
           <form className='modalForm' onSubmit={this.handleUserUpdateSubmit}>
+            <h2>Update Profile</h2>
             <label>
               Enter a new username:
             </label>
