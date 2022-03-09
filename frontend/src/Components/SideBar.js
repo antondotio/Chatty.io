@@ -13,7 +13,7 @@ class SideBar extends React.Component {
               this.props.onlineUsers.map((user, index) => {
                 return sessionStorage.getItem('username') === user.username ?
                 <div key={index}></div> :
-                <div style={{ color : '#' + user.color }} key={index}>{user.username}</div>
+                <div style={{ color : user.color }} key={index}>{user.username}</div>
               })
             }
           </div>

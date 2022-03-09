@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css';
 import Message from './Message'
-const ALERT_COLOR = '#FFFFFF';
+const ALERT_COLOR = '#0E0F19';
 
 class Chat extends React.Component {
 
