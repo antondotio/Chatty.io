@@ -176,7 +176,6 @@ class App extends React.Component {
     this.socket.emit('connect new user', user); 
   }
 
-  // TODO BOLD TEXTS
   render() {
     return (
       <div className='page'>

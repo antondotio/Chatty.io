@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
       if(newUser.color === ''){
         newUser.color = '000000';
       }
-      const user = { id: socket.id, username: newUser.username, color: '#' + newUser.color };
+      const user = { id: socket.id, username: newUser.username, color: newUser.color };
       onlineUsers.push(user);
       
       let ownMessage = { id: 'alert', body: 'Welcome to the chat, ' + newUser.username + '!'}
@@ -59,8 +59,7 @@ io.on('connection', (socket) => {
   socket.on('chat message', (messageObject) => {
     let timeStamp = new Date().toLocaleString('en-US', { hour12: true });
     let otherMessage = { id: messageObject.id, body: messageObject.message, username: messageObject.username, timeStamp: timeStamp, color: messageObject.color};
-    // let ownMessage = { id: messageObject.id, body: '<b>' + messageObject.message + '</b>', username: messageObject.username, timeStamp: timeStamp, color: messageObject.color};
-    // socket.emit('own message', ownMessage)
+
     saveMessage(otherMessage)
     io.emit('message received', otherMessage);
   });
@@ -122,7 +121,7 @@ io.on('connection', (socket) => {
           history.at(index).username = newProfile.username;
         }
         if(message.id === newProfile.id && newProfile.color !== ''){
-          history.at(index).color = '#' + newProfile.color;
+          history.at(index).color = newProfile.color;
         }
       })
 
@@ -133,7 +132,7 @@ io.on('connection', (socket) => {
         color = newProfile.color;
       }
 
-      let updatedUser = { id: socket.id, username: username, color: '#' + color};
+      let updatedUser = { id: socket.id, username: username, color: color};
       socket.emit('successful connection', {user: updatedUser, onlineUsers: onlineUsers, history: history});
       io.emit('user updated', { onlineUsers: onlineUsers, history: history });
     }

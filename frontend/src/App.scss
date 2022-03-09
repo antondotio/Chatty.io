@@ -30,7 +30,7 @@
   margin: 10px 10px 0px 10px;
   height: 100vh;
   min-height: 88%;
-  border: 1px solid black;
+  border: 1px solid rgb(58, 58, 58);
   background-color: #81a684;
   overflow-y: auto;
   border-radius: 10px;
@@ -51,6 +51,8 @@
   background-color: #466060d8;
   margin: 10% 30% 10% 30%;
   max-width: 40%;
+  color: white;
+  border-radius: 5px;
 }
 
 .modalForm {
@@ -86,7 +88,7 @@
   margin: 10px 10px 0px 10px;
   height: 100vh;
   max-height: 88%;
-  border: 1px solid black;
+  border: 1px solid rgb(58, 58, 58);
   overflow-y: auto;
   border-radius: 10px;
 }
@@ -109,7 +111,7 @@
 .message-bubble {
   padding: 3px 20px 3px 3px;
   display: inline-block;
-  border: 2px solid black;
+  border: 2px solid #635a5a;
   border-radius: 20px;
   text-align: start;
   background-color: #f8c7cc;
