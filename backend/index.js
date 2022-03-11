@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
         newUser.username = generateUsername();
       } 
       if(newUser.color === ''){
-        newUser.color = '000000';
+        newUser.color = 'FFFFFF';
       }
       const user = { id: socket.id, username: newUser.username, color: newUser.color };
       onlineUsers.push(user);
