@@ -26,6 +26,10 @@ npm start
 
 This will run the front end of the code and there will be a browser window that will automatically open on run.
 
+You can then just start using the app. Open another window to add another user and message away!
+
+This application can be used in both Chrome and Firefox.
+
 ### Changes
 
 I made a change to the way a user can change their nickname and color. Rather than using a text command, users must simply press the Update Profile button to open up a window that prompts the user to change their nickname or color or both. This way it's a lot more practical.
