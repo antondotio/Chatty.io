@@ -11,7 +11,7 @@ class Message extends React.Component {
             <div className='message-bubble'>
               <span className='username-text' style={{ color : '#' + this.props.message.color }}><b>{this.props.message.username}</b></span> 
               <br></br>
-              <span className='message-text' ref={(el) => { this.text = el; }}>{this.props.message.body}</span> 
+              <p className='message-text' ref={(el) => { this.text = el; }}>{this.props.message.body}</p> 
             </div> :
             <span className='alert-message' style={{ color : this.props.user.color }}>{this.props.message.body}</span>
           }

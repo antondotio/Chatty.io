@@ -8,7 +8,7 @@ class SideBar extends React.Component {
         <div className='sidebar'>
           <h2>Online</h2>
           <div className='users-wrapper'>
-            <span style={{ color : '#' + sessionStorage.getItem('color')}}>{sessionStorage.getItem('username')} (You)</span>
+            <div style={{ color : '#' + sessionStorage.getItem('color')}}>{sessionStorage.getItem('username')} (You)</div>
             {
               this.props.onlineUsers.map((user, index) => {
                 return sessionStorage.getItem('username') === user.username ?

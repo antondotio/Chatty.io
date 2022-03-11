@@ -6,9 +6,11 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  background-color: #2d4659;
+  background-color: #c36b85;
   font-size: 17px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  height: 100vh;
+  width: 100vw;
 }
 
 .chat-wrapper {
@@ -19,16 +21,48 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   max-width: 80%;
+}
+
+.chatForm {
+  width: 100%;
+  height: 100%;
+  margin: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  max-height: 10%;
+}
+
+.chatForm button {
+  height: 100%;
+  margin: 0px 20px 0px 20px;
+  padding: 4px 20px 4px 20px;
+  border-radius: 10px;
+}
+
+.message-wrapper {
+  background-color: #f2cac8;
+  line-height: 1.6;
+  padding: 10px;
+  margin: 10px 10px 0px 10px;
+  height: 100%;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar-wrapper {
   max-width: 20%;
   width: 100%;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -42,12 +76,11 @@
   line-height: 1.6;
   padding: 10px 10px 10px 25px;
   margin: 10px 10px 0px 10px;
-  height: 100vh;
-  min-height: 88%;
+  height: 100%;
   border: 1px solid #3a3a3a;
-  background-color: #a69761;
-  overflow-y: auto;
+  background-color: #fdbb75;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .sidebar-wrapper button {
@@ -55,15 +88,18 @@
   margin: 10px;
   padding: 4px 20px 4px 20px;
   border-radius: 10px;
+  max-height: 10%;
 }
 
 .users-wrapper {
+  max-height: 65%;
   font-weight: bold;
+  overflow-y: auto;
 }
 
 .modal {
   background-color: #04439cd0;
-  margin: 10% 30% 10% 30%;
+  margin: 10% 35% 10% 35%;
   max-width: 40%;
   color: white;
   border-radius: 5px;
@@ -88,37 +124,6 @@
   margin: 5px 0px 5px 0px;
 }
 
-.chatForm {
-  width: 100%;
-  height: 6%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-}
-
-.chatForm button {
-  margin: 10px;
-  padding: 4px 20px 4px 20px;
-  height: 111%;
-  border-radius: 10px;
-}
-
-.message-wrapper {
-  background-color: #9fb8cd;
-  line-height: 1.6;
-  padding: 10px;
-  margin: 10px 10px 0px 10px;
-  height: 100vh;
-  max-height: 88%;
-  border: 1px solid #3a3a3a;
-  overflow-y: auto;
-  border-radius: 10px;
-}
-
 .outgoing {
   font-weight: bold;
   text-align: end;
@@ -132,10 +137,11 @@
   color: white;
   padding: 3px 20px 3px 3px;
   display: inline-block;
-  border: 2px solid #27405c;
+  border: 2px solid #a84643;
   border-radius: 20px;
   text-align: start;
-  background-color: #4ba7e0;
+  background-color: #fb938f;
+  max-width: 50%;
 }
 
 .row {
@@ -151,20 +157,125 @@
 }
 
 .message-text {
-  padding: 5px 20px;
+  padding: 3px 20px;
+  margin: 0;
+  overflow-wrap: break-word;
 }
 
 textarea {
   resize: none;
-  padding: 2px 10px 2px 10px;
-  margin: 10px;
-  height: 100%;
+  padding: 5px 10px 2px 10px;
   width: 100%;
   font-size: 17px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: sans-serif;
+  border-radius: 10px;
 }
 
 h2 {
   margin: 0px 0px 10px 0px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a84643;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c96c69;
+}
+
+@media (max-width: 1000px) {
+  .page {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+        -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
+    font-size: 15px;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  .chat-wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 80%;
+  }
+  .sidebar-wrapper {
+    max-height: 17%;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    margin: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+  }
+  .sidebar {
+    line-height: 1.6;
+    padding: 0px 10px 0px 20px;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .sidebar-wrapper button {
+    height: 100%;
+    margin: 0px 20px 0px 10px;
+    padding: 4px 20px 4px 20px;
+    border-radius: 10px;
+    max-height: 100%;
+  }
+  .modal {
+    margin: 40% 10% 10% 10%;
+    max-width: 100%;
+    color: white;
+    border-radius: 5px;
+  }
+  .modalForm {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    padding: 10px;
+    line-height: 1.8;
+  }
+  .users-wrapper {
+    max-height: 65%;
+    font-weight: bold;
+    overflow-y: auto;
+  }
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
 }
 /*# sourceMappingURL=App.css.map */
